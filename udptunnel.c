@@ -115,11 +115,10 @@ void usage(char *progname)
            "  -6    use IPv6\n"
            "  -v    show some debugging output (use up to 3 for increaing levels)\n"
            "  -h    show this junks and exit\n\n"
-    	   "Example:\n"
-    	   "A$ udptunnel -v -s 44444\n"
-    	   "B$ udptunnel -v -c localhost 44445 A 44444 localhost 22\n"
-    	   "B$ ssh -p 44445 localhost\n"
-    	   "This forwards ssh from B:44445 to A:22\n"
+    	   "example:\n"
+    	   "A$ udptunnel -s 40000\n"
+    	   "B$ udptunnel -c localhost 40001 A 40000 localhost 22\n"
+    	   "B$ ssh -p 40001 localhost\n"
 
     );
 }
