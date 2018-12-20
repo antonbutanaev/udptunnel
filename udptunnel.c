@@ -119,8 +119,7 @@ void usage(char *progname)
     	   "a.net$ udptunnel -v -s 44444\n"
     	   "b.net$ udptunnel -v -c localhost 44445 a.net 44444 localhost 22\n"
     	   "b.net$ ssh -p 44445 localhost\n"
-    	   "This forwards ssh connect "
-    	   "from localhost:44445 to B.net via udp:44444 to localhost:22 on B.net\n"
+    	   "This forwards ssh connect b.net to a.net\n"
 
     );
 }
