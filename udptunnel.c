@@ -114,5 +114,13 @@ void usage(char *progname)
            "        acl: [s=<src ip>,][d=<dst ip>,][dp=<dst port>,][a=allow|deny]\n"
            "  -6    use IPv6\n"
            "  -v    show some debugging output (use up to 3 for increaing levels)\n"
-           "  -h    show this junks and exit\n");
+           "  -h    show this junks and exit\n\n"
+    	   "Example:\n"
+    	   "a.net$ udptunnel -v -s 44444\n"
+    	   "b.net$ udptunnel -v -c localhost 44445 a.net 44444 localhost 22\n"
+    	   "b.net$ ssh -p 44445 localhost\n"
+    	   "This forwards ssh connect "
+    	   "from localhost:44445 to B.net via udp:44444 to localhost:22 on B.net\n"
+
+    );
 }
