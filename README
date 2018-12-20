@@ -21,18 +21,7 @@ made with the desired TCP server.
 -----------------------------------------------------------------------------
 1.) Building
 
-On *nix systems in Makefile, make sure that the correct value is set for the 
-"OS" variable. Then just run 'make'.
-
-On Windows, if using GCC in Cygwin, make sure the "OS" variable is set to
-CYGWIN in Makefile and run 'make'.
-
-If using the VC++ compiler (cl.exe), make sure to be in the "Visual Studio
-Command Prompt", or at least have all the environment variables set correctly,
-then run 'nmake.exe /f Makefile.Win32'. Also make sure the location of 
-WS2_32.Lib is specified correctly fo the LIBS variable (if building for x64,
-set path to the 64-bit version of WS2_32.Lib).
-
+Use cmake to build.
 
 -----------------------------------------------------------------------------
 2.) Running
