@@ -15,3 +15,5 @@ add_executable(udptunnel
 	udpserver.c
 	udptunnel.c
 )
+set(CMAKE_INSTALL_PREFIX /usr)
+install(TARGETS udptunnel DESTINATION bin)
