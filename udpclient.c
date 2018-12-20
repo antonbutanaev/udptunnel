@@ -53,7 +53,7 @@ static void signal_handler(int sig);
 
 int udpclient(int argc, char *argv[])
 {
-    char *lhost, *lport, *phost, *pport, *rhost, *rport;
+    char *lhost, *lport, *phost, *psrcport, *pport, *rhost, *rport;
     list_t *clients = NULL;
     list_t *conn_clients;
     client_t *client;
@@ -78,6 +78,7 @@ int udpclient(int argc, char *argv[])
     
     int ret;
     int i;
+    char *comma;
     
     signal(SIGINT, &signal_handler);
 
@@ -86,12 +87,23 @@ int udpclient(int argc, char *argv[])
     lport = argv[i++];
     phost = argv[i++];
     pport = argv[i++];
+    comma = strchr(pport, ',');
+    if (!comma)
+    	psrcport = NULL;
+    else {
+    	psrcport = pport;
+    	pport = comma + 1;
+    	*comma = '\0';
+    }
     rhost = argv[i++];
     rport = argv[i++];
 
     /* Check validity of ports (can't check ip's b/c might be host names) */
     ERROR_GOTO(!isnum(lport), "Invalid local port.", done);
     ERROR_GOTO(!isnum(pport), "Invalid proxy port.", done);
+    if (psrcport) {
+    	ERROR_GOTO(!isnum(psrcport), "Invalid proxy source port.", done);
+    }
     ERROR_GOTO(!isnum(rport), "Invalid remote port.", done);
     
     srand(time(NULL));
@@ -108,7 +120,7 @@ int udpclient(int argc, char *argv[])
     ERROR_GOTO(conn_clients == NULL, "Error creating clients list.", done);
 
     /* Create a TCP server socket to listen for incoming connections */
-    tcp_serv = sock_create(lhost, lport, ipver, SOCK_TYPE_TCP, 1, 1);
+    tcp_serv = sock_create(lhost, lport, ipver, SOCK_TYPE_TCP, 1, 1, NULL);
     ERROR_GOTO(tcp_serv == NULL, "Error creating TCP socket.", done);
     if(debug_level >= DEBUG_LEVEL1)
     {
@@ -177,7 +189,7 @@ int udpclient(int argc, char *argv[])
             tcp_sock = sock_accept(tcp_serv);
             if(tcp_sock == NULL)
                 continue;
-            udp_sock = sock_create(phost, pport, ipver, SOCK_TYPE_UDP, 0, 1);
+            udp_sock = sock_create(phost, pport, ipver, SOCK_TYPE_UDP, 0, 1, psrcport);
             if(udp_sock == NULL)
             {
                 sock_close(tcp_sock);

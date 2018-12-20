@@ -51,6 +51,7 @@ typedef struct socket {
     int type;                     /* SOCK_STREAM or SOCK_DGRAM */
     struct sockaddr_storage addr; /* IP and port */
     socklen_t addr_len;           /* Length of sockaddr type */
+    int src_port;
 } socket_t;
 
 #define SOCK_FD(s) ((s)->fd)
@@ -59,7 +60,7 @@ typedef struct socket {
 #define SOCK_TYPE(s) ((s)->type)
 
 socket_t *sock_create(char *host, char *port, int ipver, int sock_type,
-                      int is_serv, int conn);
+                      int is_serv, int conn, char *src_port);
 socket_t *sock_copy(socket_t *sock);
 int sock_connect(socket_t *sock, int is_serv);
 socket_t *sock_accept(socket_t *serv);

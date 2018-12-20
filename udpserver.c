@@ -158,7 +158,7 @@ int udpserver(int argc, char *argv[])
 
     /* Create the socket to receive UDP messages on the specified port */
     udp_sock = sock_create((host_str[0] == 0 ? NULL : host_str), port_str,
-                           ipver, SOCK_TYPE_UDP, 1, 1);
+                           ipver, SOCK_TYPE_UDP, 1, 1, NULL);
     if(!udp_sock)
         goto done;
     if(debug_level >= DEBUG_LEVEL1)
@@ -168,7 +168,7 @@ int udpserver(int argc, char *argv[])
     }
     
     /* Create empty udp socket for getting source address of udp packets */
-    udp_from = sock_create(NULL, NULL, ipver, SOCK_TYPE_UDP, 0, 0);
+    udp_from = sock_create(NULL, NULL, ipver, SOCK_TYPE_UDP, 0, 0, NULL);
     if(!udp_from)
         goto done;
     
@@ -408,7 +408,7 @@ int handle_message(uint16_t id, uint8_t msg_type, char *data, int data_len,
             
             /* Create an unconnected TCP socket for the remote host, the
                client itself, add it to the list of clients */
-            tcp_sock = sock_create(data, port, ipver, SOCK_TYPE_TCP, 0, 0);
+            tcp_sock = sock_create(data, port, ipver, SOCK_TYPE_TCP, 0, 0, NULL);
             ERROR_GOTO(tcp_sock == NULL, "Error creating tcp socket", error);
 
             c = client_create(next_client_id++, tcp_sock, from, 0);

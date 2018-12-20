@@ -50,7 +50,7 @@ void print_hexdump(char *data, int len);
  *        if not is_serv. Doesn't call these if conn is 0.
  */
 socket_t *sock_create(char *host, char *port, int ipver, int sock_type,
-                      int is_serv, int conn)
+                      int is_serv, int conn, char *src_port)
 {
     socket_t *sock = NULL;
     struct addrinfo hints;
@@ -61,6 +61,8 @@ socket_t *sock_create(char *host, char *port, int ipver, int sock_type,
     sock = calloc(1, sizeof(*sock));
     if(!sock)
         return NULL;
+
+    sock->src_port = !src_port? -1 : atoi(src_port);
 
     paddr = SOCK_PADDR(sock);
     sock->fd = -1;
@@ -139,6 +141,7 @@ socket_t *sock_copy(socket_t *sock)
 int sock_connect(socket_t *sock, int is_serv)
 {
     struct sockaddr *paddr;
+    struct sockaddr_in srcaddr;
     int ret;
 
     if(sock->fd != -1)
@@ -169,6 +172,21 @@ int sock_connect(socket_t *sock, int is_serv)
     }
     else
     {
+        /* Bind source ip if provided */
+        if (sock->src_port != -1)
+        {
+            if(debug_level >= DEBUG_LEVEL1)
+                printf("Bind source port %d for outgoing udp connection\n", sock->src_port);
+
+            memset(&srcaddr, 0, sizeof(srcaddr));
+            srcaddr.sin_family = sock->addr.ss_family;
+            srcaddr.sin_addr.s_addr = htonl(INADDR_ANY);
+            srcaddr.sin_port = htons(sock->src_port);
+
+            ret = bind(sock->fd, (struct sockaddr*)&srcaddr, sizeof(srcaddr));
+            PERROR_GOTO(ret != 0, "bind", error);
+        }
+
         /* Connect to the server if tcp */
         if(sock->type == SOCK_STREAM)
         {

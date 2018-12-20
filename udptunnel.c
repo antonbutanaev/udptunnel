@@ -107,7 +107,7 @@ void usage(char *progname)
 {
     printf("usage: %s [-v] [-6] <-s|-c> <args>\n", progname);
     printf("  -c    client mode (default)\n"
-           "        <args>: [local host] <local port> <proxy host> <proxy port>\n"
+           "        <args>: [local host] <local port> <proxy host> <[proxy source port,]proxy port>\n"
            "                <remote host> <remote port>\n"
            "  -s    server mode\n"
            "        <args>: [host] port [acl ...]\n"
@@ -116,10 +116,10 @@ void usage(char *progname)
            "  -v    show some debugging output (use up to 3 for increaing levels)\n"
            "  -h    show this junks and exit\n\n"
     	   "Example:\n"
-    	   "a.net$ udptunnel -v -s 44444\n"
-    	   "b.net$ udptunnel -v -c localhost 44445 a.net 44444 localhost 22\n"
-    	   "b.net$ ssh -p 44445 localhost\n"
-    	   "This forwards ssh connect b.net to a.net\n"
+    	   "A$ udptunnel -v -s 44444\n"
+    	   "B$ udptunnel -v -c localhost 44445 A 44444 localhost 22\n"
+    	   "B$ ssh -p 44445 localhost\n"
+    	   "This forwards ssh from B:44445 to A:22\n"
 
     );
 }
